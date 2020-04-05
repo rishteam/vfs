@@ -1,0 +1,4 @@
+C:/Users/lpc0503/Desktop/vfs/build/CMakeFiles/rebuild_cache.dir
+C:/Users/lpc0503/Desktop/vfs/build/CMakeFiles/edit_cache.dir
+C:/Users/lpc0503/Desktop/vfs/build/CMakeFiles/mylib.dir
+C:/Users/lpc0503/Desktop/vfs/build/CMakeFiles/vfs.dir

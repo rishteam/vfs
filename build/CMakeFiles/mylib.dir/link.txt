@@ -1,0 +1,2 @@
+C:/msys64/mingw32/bin/ar.exe qc libmylib.a  CMakeFiles/mylib.dir/src/icejj.cpp.obj CMakeFiles/mylib.dir/src/fileSystem.cpp.obj
+C:/msys64/mingw32/bin/ranlib.exe libmylib.a
