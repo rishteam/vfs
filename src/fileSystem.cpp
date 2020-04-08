@@ -8,12 +8,6 @@ namespace fs = std::filesystem;
 
 namespace icejj{
 
-
-		// static int64 GetFileSizeInternal(std::ifstream fs)
-		// {
-		// 	return fs::file_size(fs);
-		// }
-
 		//TODO use C++17 filesystem
 		bool FileSystem::FileExists(const std::string& path)
 		{
@@ -26,8 +20,8 @@ namespace icejj{
 
 				return fs::file_size(path);
 			}
-			else{
-
+			else
+			{
 				printf("is not a regular file\n");
 				return 0;
 			}
@@ -85,15 +79,18 @@ namespace icejj{
 			return context;
 		}
 
-		bool FileSystem::WriteTextFile(const std::string& path, const std::string& text){
-
+		bool FileSystem::WriteFile(const std::string& path, char* buffer)
+		{
+			printf("%s\n", buffer);
+			
+			size_t size = strlen(buffer);
 			std::ofstream fs;
 			bool success;
-			fs.open(path);
+			fs.open(path, std::ios::binary);
 
 			if(fs.is_open())
 			{
-				fs << text;
+				fs.write(buffer, size);
 				success = true;
 				fs.close();
 			}
@@ -104,5 +101,10 @@ namespace icejj{
 			}
 			
 			return success;
+		}
+
+		bool FileSystem::WriteTextFile(const std::string& path, const std::string& text){
+
+			return WriteFile(path, (char*)&text[0]);
 		}
 }

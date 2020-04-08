@@ -10,7 +10,8 @@ set(CMAKE_CXX_STANDARD 17)
 # Add static library
 add_library(mylib STATIC
 	src/icejj.cpp
-	src/fileSystem.cpp
+    src/fileSystem.cpp
+    src/vfs.cpp
 )
 target_include_directories(mylib
     PUBLIC ${PROJECT_SOURCE_DIR}/include
@@ -39,6 +40,7 @@ if(MSYS)
         # For static libraries
         -static-libgcc -static-libstdc++ -lwsock32 -lws2_32
         -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive
+        -mconsole
     )
 endif(MSYS)
 
