@@ -17,7 +17,7 @@ namespace icejj{
 		void Mount(const std::string& virtualPath, const std::string& physicalPath);
 		void Unmount(const std::string& path);
 
-		bool ResovlePhysicalPath(const std::string& path, std::string& physicalPath);
+		bool ResolvePhysicalPath(const std::string& path, std::string& outphysicalPath);
 
 		char* ReadFile(const std::string& path);
 		std::string ReadTextFile(const std::string& path);

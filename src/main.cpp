@@ -18,12 +18,12 @@ int main(){
 
 	VFS::Get()->Mount("data", "data");
 	VFS::Get()->Mount("data", "test/data");
+	VFS::Get()->Mount("test", "test/test2");
+	VFS::Get()->Mount("test", "test/test3");
 
 	sf::Texture texture_1;
 	std::string physicalPath_1;
-	VFS::Get()->ResovlePhysicalPath("/data/1.jpg", physicalPath_1);
-
-	// std::cout << physicalPath_1 << std::endl;
+	VFS::Get()->ResolvePhysicalPath("/data/1.jpg", physicalPath_1);
 
 	if(!texture_1.loadFromFile(physicalPath_1))
 	{
@@ -35,7 +35,13 @@ int main(){
 
 	sf::Texture texture_2;
 	std::string physicalPath_2;
-	VFS::Get()->ResovlePhysicalPath("/data/2.png", physicalPath_2);
+	VFS::Get()->ResolvePhysicalPath("/data/2.png", physicalPath_2);
+
+	std::string charString = VFS::Get()->ReadTextFile("/test/test2.txt");
+	std::cout << charString << "\n";
+
+	std::string text = "icejj";
+	VFS::Get()->WriteTextFile("/test/test3.txt", text);
 
 	if(!texture_2.loadFromFile(physicalPath_2))
 	{
@@ -61,6 +67,5 @@ int main(){
 		window.display();
 	}
 
-	// system("pause");
 	return 0;
 }

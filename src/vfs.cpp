@@ -10,11 +10,13 @@ namespace icejj{
 	void VFS::Init()
 	{
 		vfs_Instance = new VFS();
+		printf("vfs initial\n");
 	}
 
 	void VFS::ShutDown()
 	{
 		delete vfs_Instance;
+		printf("vfs shutdown\n");
 	}
 
 	void VFS::Mount(const std::string& virtualPath, const std::string& physicalPath)
@@ -27,7 +29,7 @@ namespace icejj{
 		m_MountPoints[path].clear();
 	}
 
-	bool VFS::ResovlePhysicalPath(const std::string& path, std::string& outphysicalPath)
+	bool VFS::ResolvePhysicalPath(const std::string& path, std::string& outphysicalPath)
 	{
 		if(path[0] != '/')
 		{
@@ -85,25 +87,25 @@ namespace icejj{
 	char* VFS::ReadFile(const std::string& path)
 	{
 		std::string physicalPath;
-		return ResovlePhysicalPath(path, physicalPath)? FileSystem::ReadFile(physicalPath): nullptr;
+		return ResolvePhysicalPath(path, physicalPath)? FileSystem::ReadFile(physicalPath): nullptr;
 	}
 
 	std::string VFS::ReadTextFile(const std::string& path)
 	{
 		std::string physicalPath;
-		return ResovlePhysicalPath(path, physicalPath)? FileSystem::ReadTextFile(physicalPath): nullptr;
+		return ResolvePhysicalPath(path, physicalPath)? FileSystem::ReadTextFile(physicalPath): nullptr;
 	}
 
 	bool VFS::WriteFile(const std::string& path, char* buffer)
 	{
 		std::string physicalPath;
-		return ResovlePhysicalPath(path, physicalPath)? FileSystem::WriteFile(physicalPath, buffer): false;
+		return ResolvePhysicalPath(path, physicalPath)? FileSystem::WriteFile(physicalPath, buffer): false;
 	}
 
 	bool VFS::WriteTextFile(const std::string& path, const std::string& text)
 	{
 		std::string physicalPath;
-		return ResovlePhysicalPath(path, physicalPath)? FileSystem::WriteTextFile(physicalPath, text): false;
+		return ResolvePhysicalPath(path, physicalPath)? FileSystem::WriteTextFile(physicalPath, text): false;
 	}
 }
 
