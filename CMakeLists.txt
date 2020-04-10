@@ -1,11 +1,16 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(vfs
-    VERSION 0.0.1
-    LANGUAGES CXX
-)
+project(vfs)
+
+if(MSYS)
+    set(SFML_STATIC_LIBRARIES TRUE)
+endif(MSYS)
 
 set(CMAKE_CXX_STANDARD 17)
+
+if(MSYS)
+    set(SFML_DIR "/mingw32/lib/cmake/SFML")
+endif(MSYS)
 
 # Add static library
 add_library(mylib STATIC
@@ -25,6 +30,12 @@ target_include_directories(vfs
     PRIVATE ${PROJECT_SOURCE_DIR}/include
 )
 
+find_package(SFML 2.5 COMPONENTS graphics audio window REQUIRED)
+
+target_link_libraries(vfs
+    sfml-system sfml-window sfml-graphics sfml-network sfml-audio
+)
+
 file(COPY ${CMAKE_SOURCE_DIR}/test DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_BINARY_DIR})
 
@@ -37,6 +48,7 @@ endif(APPLE)
 if(MSYS)
     target_link_libraries(vfs
         mylib
+        sfml-graphics sfml-audio
         # For static libraries
         -static-libgcc -static-libstdc++ -lwsock32 -lws2_32
         -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive

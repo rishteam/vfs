@@ -16,8 +16,8 @@ namespace icejj{
 
 		int64 FileSystem::GetFileSize(const std::string& path)
 		{
-			if(IsFile(path)){
-
+			if(IsFile(path))
+			{
 				return fs::file_size(path);
 			}
 			else
@@ -103,8 +103,8 @@ namespace icejj{
 			return success;
 		}
 
-		bool FileSystem::WriteTextFile(const std::string& path, const std::string& text){
-
+		bool FileSystem::WriteTextFile(const std::string& path, const std::string& text)
+		{
 			return WriteFile(path, (char*)&text[0]);
 		}
 }

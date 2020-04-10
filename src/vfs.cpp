@@ -31,7 +31,6 @@ namespace icejj{
 	{
 		if(path[0] != '/')
 		{
-			printf("in\n");
 			outphysicalPath = path;
 			return FileSystem::FileExists(path);
 		}
@@ -60,7 +59,10 @@ namespace icejj{
 		const std::string& virtualDir = dirs.front();
 		
 		if(m_MountPoints.find(virtualDir) == m_MountPoints.end() || m_MountPoints[virtualDir].empty())
+		{
+			printf("VFSError: File is not mounted\n");
 			return false;
+		}
 		
 		//example: Mount("res", "fuck/res") v: res/test.txt p:fuck/res/test.txt
 		//remainder = test.txt
@@ -76,9 +78,9 @@ namespace icejj{
 			}
 		}
 
+		printf("VFSError: File is not mounted\n");
 		return false;
 	}
-
 
 	char* VFS::ReadFile(const std::string& path)
 	{
@@ -103,8 +105,6 @@ namespace icejj{
 		std::string physicalPath;
 		return ResovlePhysicalPath(path, physicalPath)? FileSystem::WriteTextFile(physicalPath, text): false;
 	}
-
-
 }
 
 

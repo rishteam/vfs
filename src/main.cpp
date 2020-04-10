@@ -1,77 +1,66 @@
 #include "icejj.h"
-// #include "fileSystem.h"
-// #include <bits/stdc++.h>
 #include "vfs.h"
 
-
-// #include <fstream>
+#include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 
 using namespace icejj;
 
 int main(){
 
-	setvbuf(stdout, nullptr, _IONBF, 0);
-	setvbuf(stderr, nullptr, _IONBF, 0);
+	// setvbuf(stdout, nullptr, _IONBF, 0);
+	// setvbuf(stderr, nullptr, _IONBF, 0);
+
+	sf::RenderWindow window(sf::VideoMode(1280, 720), "vfs test");
+
 	VFS::Init();
 
-	VFS::Get()->Mount("testA", "test/test2");
-	VFS::Get()->Mount("testB", "test/test3");
-	printf("hi\n");
+	VFS::Get()->Mount("data", "data");
+	VFS::Get()->Mount("data", "test/data");
 
-	std::string str = VFS::Get()->ReadTextFile("testA/test2.txt");
+	sf::Texture texture_1;
+	std::string physicalPath_1;
+	VFS::Get()->ResovlePhysicalPath("/data/1.jpg", physicalPath_1);
 
-	system("pause");
+	// std::cout << physicalPath_1 << std::endl;
+
+	if(!texture_1.loadFromFile(physicalPath_1))
+	{
+		printf("load failed\n");
+		return 0;
+	}
+	sf::Sprite sprite_1(texture_1);
+	sprite_1.setScale(0.5, 0.5);
+
+	sf::Texture texture_2;
+	std::string physicalPath_2;
+	VFS::Get()->ResovlePhysicalPath("/data/2.png", physicalPath_2);
+
+	if(!texture_2.loadFromFile(physicalPath_2))
+	{
+		printf("load failed\n");
+		return 0;
+	}
+	
+	sf::Sprite sprite_2(texture_2);
+
+	bool run = true;
+	while(run)
+	{
+		sf::Event event;
+		while(window.pollEvent(event))
+		{
+			if(event.type == sf::Event::Closed)
+				window.close();
+		}
+
+		window.clear();
+		window.draw(sprite_1);
+		window.draw(sprite_2);
+		window.display();
+	}
+
+	// system("pause");
 	return 0;
 }
-
-
-
-
-// int main(){
-// 	setvbuf(stdout, nullptr, _IONBF, 0);
-// 	setvbuf(stderr, nullptr, _IONBF, 0);
-// 	//
-// 	std::string filename = "test/test2/test2.txt";
-// 	std::string filename2 = "test/test2/test2.txt";
-
-// 	char *test = "hans0meDaLun";
-// 	std::string str = "AAA BBB";
-
-// 	if (FileSystem::FileExists(filename2))
-// 	{
-// 		if (FileSystem::WriteTextFile(filename2, test))
-// 		{
-// 			printf("success to write\n");
-// 		}
-// 	}
-// 	else
-// 	{
-// 		printf("file not found\n");
-// 	}
-
-// 	printf("\n----------------------------------------\n");
-
-// 	if (icejj::FileSystem::FileExists(filename))
-// 	{
-// 		printf("file/directory exists\n");
-// 		size_t fileSize = FileSystem::GetFileSize(filename);
-// 		char* buf = new char[fileSize];
-// 		if(icejj::FileSystem::ReadFile(filename, buf))
-// 		{
-// 			for(int i = 0; i < fileSize; i++)
-// 			{
-// 				if(i && i % 16 == 0) puts("");
-// 				printf("%02X ", buf[i]);
-// 			}
-// 			delete buf;
-// 			buf = nullptr;
-// 		}
-// 	}
-// 	else{
-
-// 		printf("file not found\n");
-// 	}
-
-// 	system("pause");
-// 	return 0;
-// }
