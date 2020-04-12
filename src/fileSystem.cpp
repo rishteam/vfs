@@ -1,5 +1,4 @@
 #include "fileSystem.h"
-#include <filesystem>
 #include <sys/stat.h>
 #include <iterator>
 #include <fstream>
@@ -8,103 +7,129 @@ namespace fs = std::filesystem;
 
 namespace icejj{
 
-		//TODO use C++17 filesystem
-		bool FileSystem::FileExists(const std::string& path)
-		{
-			return fs::exists(path);
-		}
+std::string FileSystem::GetCurrentDirectory()
+{
+	return fs::current_path().string();
+}
 
-		int64 FileSystem::GetFileSize(const std::string& path)
-		{
-			if(IsFile(path))
-			{
-				return fs::file_size(path);
-			}
-			else
-			{
-				printf("is not a regular file\n");
-				return 0;
-			}
-		}
+fs::path FileSystem::GetCurrentDirectoryPath()
+{
+	return fs::current_path();
+}
 
-		bool FileSystem::IsDirectory(const std::string& path)
-		{
-			return (FileExists(path)? fs::is_directory(path) : false);
-		}
+void FileSystem::SetCurrentDirectory(const std::string &path)
+{
+	fs::path p = fs::path(path);
+	if(fs::is_directory(p))
+		fs::current_path(path);
+	else
+		printf("FileSystemError: Failed to set current directory %s\n", path.c_str());
+}
 
-		bool FileSystem::IsFile(const std::string& path)
-		{
-			return (FileExists(path) ? fs::is_regular_file(path) : false);
-		}
+void FileSystem::SetCurrentDirectoryPath(const std::filesystem::path &path)
+{
+	if (fs::is_directory(path))
+		fs::current_path(path);
+	else
+		printf("FileSystemError: Failed to set current directory %s\n", path.c_str());
+}
 
-		bool FileSystem::ReadFile(const std::string& path, void* buffer, int64 size)
-		{
-			if(buffer == nullptr) return false;
-			//
-			std::ifstream fs(path, std::ios::binary);
-			if(fs.is_open())
-			{
-				if(size < 0)
-					size = GetFileSize(path);
-				
-				fs.read((char*)buffer, size);
-				fs.close();
-				return true;
-			}
-			return false;
-		}
+bool FileSystem::FileExists(const std::string& path)
+{
+	return fs::exists(path);
+}
 
-		char* FileSystem::ReadFile(const std::string& path)
-		{
-			std::ifstream fs;
-			fs.open(path, std::ios::binary);
-			int size = GetFileSize(path);
-			printf("[FileSystem::ReadFile] size = %d\n", size);
-			char* buffer = new char[size];
-			fs.read(buffer, size);
-			fs.close();
-			
-			return buffer;
-		}
+int64 FileSystem::GetFileSize(const std::string& path)
+{
+	if(IsFile(path))
+	{
+		return fs::file_size(path);
+	}
+	else
+	{
+		printf("is not a regular file\n");
+		return 0;
+	}
+}
 
+bool FileSystem::IsDirectory(const std::string& path)
+{
+	return (FileExists(path) ? fs::is_directory(path) : false);
+}
 
-		std::string FileSystem::ReadTextFile(const std::string &path)
-		{
-			std::ifstream fs;
-			std::string context;			
-			fs.open(path);
-			context = {std::istreambuf_iterator<char>(fs), {}};
-			fs.close();
+bool FileSystem::IsFile(const std::string& path)
+{
+	return (FileExists(path) ? fs::is_regular_file(path) : false);
+}
 
-			return context;
-		}
+bool FileSystem::ReadFile(const std::string& path, void* buffer, int64 size)
+{
+	if(buffer == nullptr) return false;
+	//
+	std::ifstream fs(path, std::ios::binary);
+	if(fs.is_open())
+	{
+		if(size < 0)
+			size = GetFileSize(path);
+		
+		fs.read((char*)buffer, size);
+		fs.close();
+		return true;
+	}
+	return false;
+}
 
-		bool FileSystem::WriteFile(const std::string& path, char* buffer)
-		{
-			printf("%s\n", buffer);
-			
-			size_t size = strlen(buffer);
-			std::ofstream fs;
-			bool success;
-			fs.open(path, std::ios::binary);
+char* FileSystem::ReadFile(const std::string& path)
+{
+	std::ifstream fs;
+	fs.open(path, std::ios::binary);
+	int size = GetFileSize(path);
+	printf("[FileSystem::ReadFile] size = %d\n", size);
+	char* buffer = new char[size];
+	fs.read(buffer, size);
+	fs.close();
+	
+	return buffer;
+}
 
-			if(fs.is_open())
-			{
-				fs.write(buffer, size);
-				success = true;
-				fs.close();
-			}
-			else
-			{
-				printf("error opening file\n");
-				success = false;
-			}
-			
-			return success;
-		}
+std::string FileSystem::ReadTextFile(const std::string &path)
+{
+	std::ifstream fs;
+	std::string context;			
+	fs.open(path);
+	context = {std::istreambuf_iterator<char>(fs), {}};
+	fs.close();
 
-		bool FileSystem::WriteTextFile(const std::string& path, const std::string& text)
-		{
-			return WriteFile(path, (char*)&text[0]);
-		}
+	return context;
+}
+
+bool FileSystem::WriteFile(const std::string& path, char* buffer)
+{
+	printf("%s\n", buffer);
+	
+	size_t size = strlen(buffer);
+	std::ofstream fs;
+	bool success;
+	fs.open(path, std::ios::binary);
+
+	if(fs.is_open())
+	{
+		fs.write(buffer, size);
+		success = true;
+		fs.close();
+	}
+	else
+	{
+		printf("error opening file\n");
+		success = false;
+	}
+	
+	return success;
+}
+
+bool FileSystem::WriteTextFile(const std::string& path, const std::string& text)
+{
+	return WriteFile(path, (char*)&text[0]);
+}
+
 }

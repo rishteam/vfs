@@ -1,6 +1,5 @@
-#include "icejj.h"
+#include "pch.h"
 #include "vfs.h"
-
 #include "fileSystem.h"
 
 namespace icejj{
@@ -10,13 +9,13 @@ namespace icejj{
 	void VFS::Init()
 	{
 		vfs_Instance = new VFS();
-		printf("vfs initial\n");
+		printf("VFS: Initialized\n");
 	}
 
 	void VFS::ShutDown()
 	{
 		delete vfs_Instance;
-		printf("vfs shutdown\n");
+		printf("VFS: Shutdown\n");
 	}
 
 	void VFS::Mount(const std::string& virtualPath, const std::string& physicalPath)
@@ -29,24 +28,22 @@ namespace icejj{
 		m_MountPoints[path].clear();
 	}
 
-	bool VFS::ResolvePhysicalPath(const std::string& path, std::string& outphysicalPath)
+	bool VFS::ResolvePhysicalPath(const std::string& vpath, std::string& outphysicalPath)
 	{
-		if(path[0] != '/')
+		if(vpath[0] != '/')
 		{
-			outphysicalPath = path;
-			return FileSystem::FileExists(path);
+			outphysicalPath = vpath;
+			return FileSystem::FileExists(vpath);
 		}
-
 		std::vector<std::string> dirs;
-
-		//split path
-		//example: aaa/bbb/ccc to [aaa, bbb, ccc]
+		// split path
+		// e.g. split "aaa/bbb/ccc" to [aaa, bbb, ccc]
+		// (stored in std::vector)
 		size_t start = 0;
-		size_t end = path.find_first_of('/');
-
+		size_t end = vpath.find_first_of('/');
 		while(end <= std::string::npos)
 		{
-			std::string token = path.substr(start, end-start);
+			std::string token = vpath.substr(start, end-start);
 			if(!token.empty())
 				dirs.push_back(token);
 
@@ -54,33 +51,38 @@ namespace icejj{
 				break;
 
 			start = end + 1;
-			end = path.find_first_of('/', start);
+			end = vpath.find_first_of('/', start);
 		}
-		//end split path
 
 		const std::string& virtualDir = dirs.front();
-		
-		if(m_MountPoints.find(virtualDir) == m_MountPoints.end() || m_MountPoints[virtualDir].empty())
+		// If the virtual directory doesn't exist
+		if(!m_MountPoints.count(virtualDir))
 		{
-			printf("VFSError: File is not mounted\n");
+			printf("VFSError: Mapping entry is not found (%s)\n", virtualDir.c_str());
 			return false;
 		}
-		
-		//example: Mount("res", "fuck/res") v: res/test.txt p:fuck/res/test.txt
-		//remainder = test.txt
-		std::string remainder = path.substr(virtualDir.size()+1, path.size() - virtualDir.size());
-
-		for(const std::string& physicalPath: m_MountPoints[virtualDir])
+		// If the virtual directory doesn't have any mapping
+		if(m_MountPoints[virtualDir].empty())
 		{
-			std::string path_ = physicalPath + remainder;
-			if(FileSystem::FileExists(path_))
+			printf("VFSError: Mapping list is empty (%s)\n", virtualDir.c_str());
+		}
+		
+		// e.g. Mount("res", "fuck/res") 
+		// v: res/test.txt p:fuck/res/test.txt
+		// remainder = test.txt
+		std::string remainder = vpath.substr(virtualDir.size()+1, vpath.size() - virtualDir.size());
+		// Search the file in the mapping list
+		for(const std::string& physicalPath : m_MountPoints[virtualDir])
+		{
+			std::string p = physicalPath + remainder;
+			if(FileSystem::FileExists(p))
 			{
-				outphysicalPath = path_;
+				outphysicalPath = p;
 				return true;
 			}
 		}
 
-		printf("VFSError: File is not mounted\n");
+		printf("VFSError: File is not found (%s)\n", vpath.c_str());
 		return false;
 	}
 
