@@ -12,7 +12,7 @@ int main(){
 	sf::RenderWindow window(sf::VideoMode(1280, 720), "vfs test");
 	
 	// Change the Current Working Directory (CWD)
-	FileSystem::SetCurrentDirectoryPath(FileSystem::GetCurrentDirectoryPath().parent_path());
+	FileSystem::SetCurrentDirectoryPath(FileSystem::GetCurrentDirectoryPath().parent_path() / "vfs_root");
 	printf("cwd= %s\n", FileSystem::GetCurrentDirectory().c_str());
 
 	// Initialize the VFS
