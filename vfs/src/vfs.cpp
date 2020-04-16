@@ -71,18 +71,18 @@ namespace icejj{
 		// v: res/test.txt p:fuck/res/test.txt
 		// remainder = test.txt
 		std::string remainder = vpath.substr(virtualDir.size()+1, vpath.size() - virtualDir.size());
-		// Search the file in the mapping list
-		// for(const std::string& physicalPath : m_MountPoints[virtualDir])
-		// {
-		// 	std::string p = physicalPath + remainder;
-		// 	if(FileSystem::FileExists(p))
-		// 	{
-		// 		outphysicalPath = p;
-		// 		return true;
-		// 	}
-		// }
+		//Search the file in the mapping list
+		for(const std::string& physicalPath : m_MountPoints[virtualDir])
+		{
+			std::string p = physicalPath + remainder;
+			if(FileSystem::FileExists(p))
+			{
+				outphysicalPath = p;
+				return true;
+			}
+		}
 
-		// printf("VFSError: File is not found (%s)\n", vpath.c_str());
+		printf("VFSError: File is not found (%s)\n", vpath.c_str());
 		return true;
 	}
 

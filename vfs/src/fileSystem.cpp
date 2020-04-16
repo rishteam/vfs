@@ -34,6 +34,15 @@ void FileSystem::SetCurrentDirectoryPath(const std::filesystem::path &path)
 		printf("FileSystemError: Failed to set current directory %s\n", path.c_str());
 }
 
+void FileSystem::CreateFile(const std::string& path)
+{
+	std::ofstream file
+	{
+		path
+	};
+	printf("FileSystem: File create in (%s)\n", path.c_str());
+}
+
 bool FileSystem::FileExists(const std::string& path)
 {
 	return fs::exists(path);
@@ -64,7 +73,6 @@ bool FileSystem::IsFile(const std::string& path)
 
 bool FileSystem::ReadFile(const std::string& path, void* buffer, int64 size)
 {
-	//TODO check file exist
 	if(buffer == nullptr) return false;
 	//
 	std::ifstream fs(path, std::ios::binary);
@@ -82,11 +90,10 @@ bool FileSystem::ReadFile(const std::string& path, void* buffer, int64 size)
 
 char* FileSystem::ReadFile(const std::string& path)
 {
-	//TODO check file exist
 	std::ifstream fs;
 	fs.open(path, std::ios::binary);
 	int size = GetFileSize(path);
-	printf("[FileSystem::ReadFile] size = %d\n", size);
+	// printf("[FileSystem::ReadFile] size = %d\n", size);
 	char* buffer = new char[size];
 	fs.read(buffer, size);
 	fs.close();
@@ -96,7 +103,6 @@ char* FileSystem::ReadFile(const std::string& path)
 
 std::string FileSystem::ReadTextFile(const std::string &path)
 {
-	//TODO check file exist
 	std::ifstream fs;
 	std::string context;			
 	fs.open(path);
@@ -108,8 +114,7 @@ std::string FileSystem::ReadTextFile(const std::string &path)
 
 bool FileSystem::WriteFile(const std::string& path, char* buffer, size_t size)
 {
-	//TODO if file not found, open file
-	printf("%s\n", buffer);
+	// printf("%s\n", buffer);
 	
 	std::ofstream fs;
 	bool success;
@@ -127,6 +132,7 @@ bool FileSystem::WriteFile(const std::string& path, char* buffer, size_t size)
 		success = false;
 	}
 	
+	printf("FileSystem: Success to write content to file\n");
 	return success;
 }
 

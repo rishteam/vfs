@@ -10,6 +10,7 @@ public:
 	static std::filesystem::path GetCurrentDirectoryPath();
 	static void SetCurrentDirectory(const std::string &path);
 	static void SetCurrentDirectoryPath(const std::filesystem::path &path);
+	static void CreateFile(const std::string& path);
 
 	static bool FileExists(const std::string& path);
 	static int64 GetFileSize(const std::string& path);

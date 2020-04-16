@@ -6,9 +6,9 @@ using namespace icejj;
 
 struct Foo
 {
-	int a = 0;
+	int a = 4;
 	float b = 8.7;
-	char c[10] = "123";
+	char c[15] = "struct foo";
 };
 
 int main(){
@@ -17,7 +17,7 @@ int main(){
 	setvbuf(stderr, nullptr, _IONBF, 0);
 	//
 	sf::RenderWindow window(sf::VideoMode(1280, 720), "vfs test");
-	
+	window.setFramerateLimit(60);
 	// Change the Current Working Directory (CWD)
 	FileSystem::SetCurrentDirectoryPath(FileSystem::GetCurrentDirectoryPath().parent_path().parent_path() / "vfs_root");
 	printf("cwd= %s\n", FileSystem::GetCurrentDirectory().c_str());
@@ -62,10 +62,26 @@ int main(){
 
 	// Test WriteTextFile()
 
-	
 	Foo foo;
-	VFS::Get()->WriteFile("/test/WriteFile1.bin", (char*)&foo, sizeof(foo));
+	printf("%d\n", sizeof(foo));
+	if(VFS::Get()->WriteFile("/test/WriteFile1.bin", (char*)&foo, sizeof(foo)))
+	{
+	}
+	else
+	{
+		FileSystem::CreateFile("test/test2/WriteFile1.bin");
+		VFS::Get()->WriteFile("/test/WriteFile1.bin", (char*)&foo, sizeof(foo));
+	}
 
+	Foo *foo2;
+	foo2 = (Foo*)VFS::Get()->ReadFile("/test/WriteFile1.bin");
+	foo2->a = 87;
+
+
+	VFS::Get()->WriteFile("/test/WriteFile1.bin", (char*)foo2, sizeof(Foo));
+	foo2 = (Foo *)VFS::Get()->ReadFile("/test/WriteFile1.bin");
+
+	std::cout << foo2->a << std::endl;
 	// std::string text = "icejj";
 	// size_t size = text.size();
 	// printf("size: %d\n", size);
@@ -79,7 +95,6 @@ int main(){
 		{
 			if(event.type == sf::Event::Closed)
 				window.close();
-				// printf("test\n");
 		}
 
 		window.clear();
