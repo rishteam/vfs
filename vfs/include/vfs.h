@@ -24,8 +24,8 @@ public:
 	char* ReadFile(const std::string& path);
 	std::string ReadTextFile(const std::string& path);
 
-	bool WriteFile(const std::string& path, char* buffer);
-	bool WriteTextFile(const std::string& path, const std::string& text);
+	bool WriteFile(const std::string& path, char* buffer, const size_t size);
+	bool WriteTextFile(const std::string& path, const std::string& text, const size_t size);
 };
 
 }

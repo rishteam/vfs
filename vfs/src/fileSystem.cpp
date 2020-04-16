@@ -64,6 +64,7 @@ bool FileSystem::IsFile(const std::string& path)
 
 bool FileSystem::ReadFile(const std::string& path, void* buffer, int64 size)
 {
+	//TODO check file exist
 	if(buffer == nullptr) return false;
 	//
 	std::ifstream fs(path, std::ios::binary);
@@ -81,6 +82,7 @@ bool FileSystem::ReadFile(const std::string& path, void* buffer, int64 size)
 
 char* FileSystem::ReadFile(const std::string& path)
 {
+	//TODO check file exist
 	std::ifstream fs;
 	fs.open(path, std::ios::binary);
 	int size = GetFileSize(path);
@@ -94,6 +96,7 @@ char* FileSystem::ReadFile(const std::string& path)
 
 std::string FileSystem::ReadTextFile(const std::string &path)
 {
+	//TODO check file exist
 	std::ifstream fs;
 	std::string context;			
 	fs.open(path);
@@ -103,16 +106,16 @@ std::string FileSystem::ReadTextFile(const std::string &path)
 	return context;
 }
 
-bool FileSystem::WriteFile(const std::string& path, char* buffer)
+bool FileSystem::WriteFile(const std::string& path, char* buffer, size_t size)
 {
+	//TODO if file not found, open file
 	printf("%s\n", buffer);
 	
-	size_t size = strlen(buffer);
 	std::ofstream fs;
 	bool success;
 	fs.open(path, std::ios::binary);
 
-	if(fs.is_open())
+	if(fs)
 	{
 		fs.write(buffer, size);
 		success = true;
@@ -127,9 +130,9 @@ bool FileSystem::WriteFile(const std::string& path, char* buffer)
 	return success;
 }
 
-bool FileSystem::WriteTextFile(const std::string& path, const std::string& text)
+bool FileSystem::WriteTextFile(const std::string& path, const std::string& text, size_t size)
 {
-	return WriteFile(path, (char*)&text[0]);
+	return WriteFile(path, (char*)&text[0], size);
 }
 
 }

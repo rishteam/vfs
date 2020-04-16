@@ -4,6 +4,13 @@
 
 using namespace icejj;
 
+struct Foo
+{
+	int a = 0;
+	float b = 8.7;
+	char c[10] = "123";
+};
+
 int main(){
 
 	setvbuf(stdout, nullptr, _IONBF, 0);
@@ -12,7 +19,7 @@ int main(){
 	sf::RenderWindow window(sf::VideoMode(1280, 720), "vfs test");
 	
 	// Change the Current Working Directory (CWD)
-	FileSystem::SetCurrentDirectoryPath(FileSystem::GetCurrentDirectoryPath().parent_path() / "vfs_root");
+	FileSystem::SetCurrentDirectoryPath(FileSystem::GetCurrentDirectoryPath().parent_path().parent_path() / "vfs_root");
 	printf("cwd= %s\n", FileSystem::GetCurrentDirectory().c_str());
 
 	// Initialize the VFS
@@ -54,8 +61,15 @@ int main(){
 	std::cout << charString << "\n";
 
 	// Test WriteTextFile()
-	std::string text = "icejj";
-	VFS::Get()->WriteTextFile("/test/test3.txt", text);
+
+	
+	Foo foo;
+	VFS::Get()->WriteFile("/test/WriteFile1.bin", (char*)&foo, sizeof(foo));
+
+	// std::string text = "icejj";
+	// size_t size = text.size();
+	// printf("size: %d\n", size);
+	// VFS::Get()->WriteTextFile("/test/test3.txt", text, size);
 
 	bool run = true;
 	while(run)
@@ -65,6 +79,7 @@ int main(){
 		{
 			if(event.type == sf::Event::Closed)
 				window.close();
+				// printf("test\n");
 		}
 
 		window.clear();
@@ -74,4 +89,5 @@ int main(){
 	}
 
 	VFS::ShutDown();
+	system("pause");
 }

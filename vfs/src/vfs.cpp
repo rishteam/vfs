@@ -72,18 +72,18 @@ namespace icejj{
 		// remainder = test.txt
 		std::string remainder = vpath.substr(virtualDir.size()+1, vpath.size() - virtualDir.size());
 		// Search the file in the mapping list
-		for(const std::string& physicalPath : m_MountPoints[virtualDir])
-		{
-			std::string p = physicalPath + remainder;
-			if(FileSystem::FileExists(p))
-			{
-				outphysicalPath = p;
-				return true;
-			}
-		}
+		// for(const std::string& physicalPath : m_MountPoints[virtualDir])
+		// {
+		// 	std::string p = physicalPath + remainder;
+		// 	if(FileSystem::FileExists(p))
+		// 	{
+		// 		outphysicalPath = p;
+		// 		return true;
+		// 	}
+		// }
 
-		printf("VFSError: File is not found (%s)\n", vpath.c_str());
-		return false;
+		// printf("VFSError: File is not found (%s)\n", vpath.c_str());
+		return true;
 	}
 
 	char* VFS::ReadFile(const std::string& path)
@@ -98,17 +98,15 @@ namespace icejj{
 		return ResolvePhysicalPath(path, physicalPath)? FileSystem::ReadTextFile(physicalPath): nullptr;
 	}
 
-	bool VFS::WriteFile(const std::string& path, char* buffer)
+	bool VFS::WriteFile(const std::string& path, char* buffer, const size_t size)
 	{
 		std::string physicalPath;
-		return ResolvePhysicalPath(path, physicalPath)? FileSystem::WriteFile(physicalPath, buffer): false;
+		return ResolvePhysicalPath(path, physicalPath)? FileSystem::WriteFile(physicalPath, buffer, size): false;
 	}
 
-	bool VFS::WriteTextFile(const std::string& path, const std::string& text)
+	bool VFS::WriteTextFile(const std::string& path, const std::string& text, const size_t size)
 	{
 		std::string physicalPath;
-		return ResolvePhysicalPath(path, physicalPath)? FileSystem::WriteTextFile(physicalPath, text): false;
+		return ResolvePhysicalPath(path, physicalPath)? FileSystem::WriteTextFile(physicalPath, text, size): false;
 	}
 }
-
-
