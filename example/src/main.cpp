@@ -7,7 +7,7 @@ using namespace icejj;
 struct Foo
 {
 	int a = 4;
-	float b = 8.7;
+	float b = 8.7f;
 	char c[15] = "struct foo";
 };
 
@@ -42,7 +42,7 @@ int main(){
 	if(!texture_1.loadFromFile(physicalPath_1))
 		printf("Failed to load texture_1\n");
 	sf::Sprite sprite_1(texture_1);
-	sprite_1.setScale(0.1, 0.1);
+	sprite_1.setScale(0.1f, 0.1f);
 	sprite_1.setPosition(0, 0);
 
 	// Test load 2.png
@@ -64,22 +64,22 @@ int main(){
 
 	Foo foo;
 	printf("%d\n", sizeof(foo));
-	if(VFS::Get()->WriteFile("/test/WriteFile1.bin", (char*)&foo, sizeof(foo)))
+	if(VFS::Get()->WriteFile("/test/WriteFile1.bin", reinterpret_cast<char*>(&foo), sizeof(foo)))
 	{
 	}
 	else
 	{
 		FileSystem::CreateFile("test/test2/WriteFile1.bin");
-		VFS::Get()->WriteFile("/test/WriteFile1.bin", (char*)&foo, sizeof(foo));
+		VFS::Get()->WriteFile("/test/WriteFile1.bin", reinterpret_cast<char*>(&foo), sizeof(foo));
 	}
 
 	Foo *foo2;
-	foo2 = (Foo*)VFS::Get()->ReadFile("/test/WriteFile1.bin");
+	foo2 = reinterpret_cast<Foo*>(VFS::Get()->ReadFile("/test/WriteFile1.bin"));
 	foo2->a = 87;
 
 
-	VFS::Get()->WriteFile("/test/WriteFile1.bin", (char*)foo2, sizeof(Foo));
-	foo2 = (Foo *)VFS::Get()->ReadFile("/test/WriteFile1.bin");
+	VFS::Get()->WriteFile("/test/WriteFile1.bin", reinterpret_cast<char*>(foo2), sizeof(Foo));
+	foo2 = reinterpret_cast<Foo*>(VFS::Get()->ReadFile("/test/WriteFile1.bin"));
 
 	std::cout << foo2->a << std::endl;
 	// std::string text = "icejj";

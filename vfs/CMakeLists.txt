@@ -1,8 +1,32 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(vfs)
+option(CMAKE_BUILD_TYPE "Build Type" Debug)
 
-set(CMAKE_CXX_STANDARD 17)
+project(vfs CXX)
+include(cmake/StandardProjectSettings.cmake)
+
+add_library(project_options INTERFACE)
+target_compile_features(project_options INTERFACE cxx_std_17)
+
+
+if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+  option(ENABLE_BUILD_WITH_TIME_TRACE "Enable -ftime-trace to generate time tracing .json files on clang" OFF)
+  if (ENABLE_BUILD_WITH_TIME_TRACE)
+    add_compile_definitions(project_options INTERFACE -ftime-trace)
+  endif()
+endif()
+
+# Link this 'library' to use the warnings specified in CompilerWarnings.cmake
+add_library(project_warnings INTERFACE)
+
+# standard compiler warnings
+include(cmake/CompilerWarnings.cmake)
+set_project_warnings(project_warnings)
+
+# enable doxygen
+set(DOXYGEN_EXAMPLE_PATH ${PROJECT_SOURCE_DIR}/docs/)
+include(cmake/Doxygen.cmake)
+enable_doxygen()
 
 # Add the executable
 add_library(vfs
@@ -12,6 +36,8 @@ add_library(vfs
 target_include_directories(vfs
     PUBLIC ${PROJECT_SOURCE_DIR}/include
 )
+
+target_link_libraries(vfs project_options project_warnings)
 
 if(MSYS)
     target_link_libraries(vfs
