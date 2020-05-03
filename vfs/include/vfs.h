@@ -1,6 +1,6 @@
 /**
  * @file vfs.h
- * @author icejj (icejj@rish.com.tw)
+ * @author icejj (icejj@rish.com.tw), roy4801 (roy@rish.com.tw)
  * @brief Virtual File System
  * @version 0.1
  * @date 2020-05-02
@@ -22,10 +22,14 @@ class VFS
 private:
     /**
      * @brief Instancce of VFS
-     *
-     * The instance of VFS (singleton pattern)
+     * @details The instance of VFS (singleton pattern)
      */
     static VFS* vfs_Instance;
+
+    /**
+     * @brief Mount points
+     * @details The mapping from virtual paths to physical pathss
+     */
     std::unordered_map<std::string, std::vector<std::string> > m_MountPoints;
     // TODO: not unmount whole virtual path: change std::vector to std::list
 public:
@@ -39,8 +43,7 @@ public:
     static void ShutDown();
     /**
      * @brief Get the instance of VFS
-     *
-     * Retrieve the pointer to the instance of VFS
+     * @details Retrieve the pointer to the instance of VFS
      * @return VFS* Pointer to the VFS object
      */
     inline static VFS *Get() { return vfs_Instance; }
@@ -97,10 +100,51 @@ public:
      */
     bool ResolvePhysicalPath(const std::string& path, std::string& outphysicalPath);
 
+    /**
+     * @brief Read the file in binary mode
+     * @warning This will return a new allocated `char*` \n
+     *          Remeber to *DELETE* on your own
+     * @param path Path to the file in VFS
+     * @return char* File content
+     */
     char* ReadFile(const std::string& path);
+    // TODO: return length?
+
+    /**
+     * @brief Read the file in text mode
+     * @details Read all bytes from the file in text mode
+     * @param path Path to the file in VFS
+     * @return std::string File content
+     */
     std::string ReadTextFile(const std::string& path);
 
+    /**
+     * @brief Write the file in binary mode
+     *
+     * @note If the file is not exist, the it won’t generate a file.\n
+     *        You should create the file before you access
+     *
+     * @param path Path to the file in VFS
+     * @param buffer The buffer contains bytes will be written into file
+     * @param size The length of data
+     *
+     * @return true Succeed to write the file
+     * @return false Failed to write the file
+     */
     bool WriteFile(const std::string &path, const char *buffer, const int size);
+
+    /**
+     * @brief Write the file in text mode
+     *
+      * @note If the file is not exist, the it won’t generate a file.\n
+     *        You should create the file before you access
+     *
+     * @param path Path to the file in VFS
+     * @param text The buffer contains bytes will be written into file
+     * @param size The length of data
+     * @return true Succeed to write the file
+     * @return false Failed to write the file
+     */
     bool WriteTextFile(const std::string& path, const std::string& text, const int size);
 };
 
