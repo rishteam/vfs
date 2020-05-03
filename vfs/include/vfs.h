@@ -136,8 +136,8 @@ public:
     /**
      * @brief Write the file in text mode
      *
-      * @note If the file is not exist, the it won’t generate a file.\n
-     *        You should create the file before you access
+     * @note If the file is not exist, the it won’t generate a file.\n
+     *       You should create the file before you access
      *
      * @param path Path to the file in VFS
      * @param text The buffer contains bytes will be written into file
