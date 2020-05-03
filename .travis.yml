@@ -23,15 +23,12 @@ script:
   - cmake -DBUILD_ONLY_DOCS=ON . -Bbuild/
   - cd build/
   - make doxygen-docs
-  - ls -al
-  - pwd
-  - echo $TRAVIS_BUILD_DIR
 
 # Deploy using travis builtin GitHub Pages support
 deploy:
   provider: pages
   skip_cleanup: true
-  local_dir: $TRAVIS_BUILD_DIR/build/vfs/html
+  local_dir: $TRAVIS_BUILD_DIR/build/html
   github_token: $GITHUB_API_KEY
   on:
     branch: master
