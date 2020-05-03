@@ -1,3 +1,4 @@
+language: cpp
 # This will run on Travis' 'new' container-based infrastructure
 sudo: false
 
@@ -22,6 +23,7 @@ script:
   - cmake -DBUILD_ONLY_DOCS=ON . -Bbuild/
   - cd build/
   - make doxygen-docs
+  - ls -al
 
 # Deploy using travis builtin GitHub Pages support
 deploy:
