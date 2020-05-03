@@ -24,6 +24,7 @@ script:
   - cd build/
   - make doxygen-docs
   - ls -al
+  - pwd
 
 # Deploy using travis builtin GitHub Pages support
 deploy:
