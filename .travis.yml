@@ -19,7 +19,7 @@ addons:
 
 # Build your code e.g. by calling make
 script:
-  - cmake . -Bbuild/
+  - cmake -DBUILD_ONLY_DOCS=ON . -Bbuild/
   - cd build/
   - make doxygen-docs
 
