@@ -28,22 +28,22 @@ void VFS::Unmount(const std::string& path)
 	m_MountPoints[path].clear();
 }
 
-bool VFS::ResolvePhysicalPath(const std::string& vpath, std::string& outphysicalPath)
+bool VFS::ResolvePhysicalPath(const std::string& path, std::string& outphysicalPath)
 {
-	if(vpath[0] != '/')
+	if(path[0] != '/')
 	{
-		outphysicalPath = vpath;
-		return FileSystem::FileExists(vpath);
+		outphysicalPath = path;
+		return FileSystem::FileExists(path);
 	}
 	std::vector<std::string> dirs;
 	// split path
 	// e.g. split "aaa/bbb/ccc" to [aaa, bbb, ccc]
 	// (stored in std::vector)
 	size_t start = 0;
-	size_t end = vpath.find_first_of('/');
+	size_t end = path.find_first_of('/');
 	while(end <= std::string::npos)
 	{
-		std::string token = vpath.substr(start, end-start);
+		std::string token = path.substr(start, end-start);
 		if(!token.empty())
 			dirs.push_back(token);
 
@@ -51,7 +51,7 @@ bool VFS::ResolvePhysicalPath(const std::string& vpath, std::string& outphysical
 			break;
 
 		start = end + 1;
-		end = vpath.find_first_of('/', start);
+		end = path.find_first_of('/', start);
 	}
 
 	const std::string& virtualDir = dirs.front();
@@ -70,7 +70,7 @@ bool VFS::ResolvePhysicalPath(const std::string& vpath, std::string& outphysical
 	// e.g. Mount("res", "fuck/res")
 	// v: res/test.txt p:fuck/res/test.txt
 	// remainder = test.txt
-	std::string remainder = vpath.substr(virtualDir.size()+1, vpath.size() - virtualDir.size());
+	std::string remainder = path.substr(virtualDir.size()+1, path.size() - virtualDir.size());
 	//Search the file in the mapping list
 	for(const std::string& physicalPath : m_MountPoints[virtualDir])
 	{
@@ -82,7 +82,7 @@ bool VFS::ResolvePhysicalPath(const std::string& vpath, std::string& outphysical
 		}
 	}
 
-	printf("VFSError: File is not found (%s)\n", vpath.c_str());
+	printf("VFSError: File is not found (%s)\n", path.c_str());
 	return true;
 }
 

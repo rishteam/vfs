@@ -13,7 +13,8 @@
             "windowsSdkVersion": "10.0.18362.0",
             "compilerPath": "C:\\msys64\\mingw32\\bin\\gcc",
             "cStandard": "c11",
-            "cppStandard": "c++17"
+            "cppStandard": "c++17",
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
         }
     ],
     "version": 4
