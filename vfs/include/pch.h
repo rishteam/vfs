@@ -19,5 +19,4 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
-
-typedef long long int64;
+#include <SFML/Window.hpp>
