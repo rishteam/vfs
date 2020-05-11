@@ -37,7 +37,7 @@ namespace icejj{
 		}
 		std::vector<std::string> dirs;
 		// split path
-		// e.g. split "aaa/bbb/ccc" to [aaa, bbb, ccc]
+		// e.g. split "/aaa/bbb/ccc" to [aaa, bbb, ccc]
 		// (stored in std::vector)
 		size_t start = 0;
 		size_t end = vpath.find_first_of('/');
